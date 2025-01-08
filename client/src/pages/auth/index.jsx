@@ -1,10 +1,27 @@
 import React from 'react'
 import Background from '@/assets/login2.png'
 import Victory from '@/assets/victory.svg'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Input } from '@/components/ui/input'
+import { Button, buttonVariants } from '@/components/ui/button'
+import { useState } from 'react'
+import { FaGoogle } from "react-icons/fa";
 
 
 const Auth = () => {
+
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+
+    const handleLogin = () => {}
+
+    const handleSignup = () => {}
+
+    const handleGoogleLogin = () => {}
+
+    const handleGoogleSignup = () => {}
+
   return (
     <div className="h-[100vh] w-[100vw] flex items-center justify-center">
         <div className="h-[80vh] bg-white border-2 border-white text-opacity-90 
@@ -40,10 +57,74 @@ const Auth = () => {
                                 signup
                             </TabsTrigger>
                         </TabsList>
-                        <TabsContent className="" value="login"></TabsContent>
-                        <TabsContent className="" value="signup"></TabsContent>
+                        <TabsContent className="flex flex-col gap-5 mt-10" value="login">
+                            <Input
+                            placeholder="Email"
+                            type="Email"
+                            value={email}
+                            className="rounded-full p-6"
+                            onChange={(e) => setEmail(e.target.value)}
+                            />
+                            <Input
+                            placeholder="Password"
+                            type="password"
+                            value={password}
+                            className="rounded-full p-6"
+                            onChange={(e) => setPassword(e.target.value)}
+                            />
+                            <Button
+                            className="rounded-full p-6"
+                            onClick={handleLogin}
+                            >
+                            Login
+                            </Button>
+                            <Button
+                            className="rounded-full p-6"
+                            onClick={handleGoogleLogin}
+                            >
+                            <FaGoogle /> google
+                            </Button>
+                        </TabsContent>
+                        <TabsContent className="flex flex-col gap-5" value="signup">
+                        <Input
+                            placeholder="Email"
+                            type="Email"
+                            value={email}
+                            className="rounded-full p-6"
+                            onChange={(e) => setEmail(e.target.value)}
+                            />
+                            <Input
+                            placeholder="Password"
+                            type="password"
+                            value={password}
+                            className="rounded-full p-6"
+                            onChange={(e) => setPassword(e.target.value)}
+                            />
+                            <Input
+                            placeholder="Confirm Password"
+                            type="password"
+                            value={confirmPassword}
+                            className="rounded-full p-6"
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            />
+                            <Button
+                            className="rounded-full p-6"
+                            onClick={handleSignup}
+                            >
+                            Signup
+                            </Button>
+                            <Button
+                            className="rounded-full p-6"
+                            onClick={handleGoogleSignup}
+                            >
+                            <FaGoogle /> google
+                            </Button>
+                        </TabsContent>
                     </Tabs>
                 </div>
+            </div>
+            <div className="hidden xl:flex justify-center items-center">
+                <img className="h-[700px]" src={Background} alt="image"/>
             </div>
         </div>
     </div>
