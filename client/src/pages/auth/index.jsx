@@ -21,10 +21,24 @@ const Auth = () => {
                     </p>
                 </div>
                 <div className="flex items-center justify-center w-full">
-                    <Tabs defaultValue="account" className="w-[400px]">
-                        <TabsList>
-                            <TabsTrigger value="login">login</TabsTrigger>
-                            <TabsTrigger value="signup">signup</TabsTrigger>
+                    <Tabs defaultValue="account" className="w-3/4">
+                        <TabsList className="bg-transparent rounded-none w-full">
+                            <TabsTrigger 
+                            value="login"
+                            className="date-[state=active]:bg-transparent text-black text-opacity-90 border-b-2
+                            rounded-none w-full data-[state=active]:text-black data-[state=active]:font-semibold 
+                            data-[state=active]:border-b-purple-500 p-3 transition-all duration-300"
+                            >
+                                login
+                            </TabsTrigger>
+                            <TabsTrigger 
+                            value="signup"
+                            className="date-[state=active]:bg-transparent text-black text-opacity-90 border-b-2
+                            rounded-none w-full data-[state=active]:text-black data-[state=active]:font-semibold 
+                            data-[state=active]:border-b-purple-500 p-3 transition-all duration-300"
+                            >
+                                signup
+                            </TabsTrigger>
                         </TabsList>
                         <TabsContent className="" value="login"></TabsContent>
                         <TabsContent className="" value="signup"></TabsContent>
