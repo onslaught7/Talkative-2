@@ -3,6 +3,7 @@ import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
+import authRoutes from './routes/AuthRoutes.js';
 // The below hierarchy is to be maintained
 
 // Loads the .env files and adds the files to the variable process.env
@@ -31,6 +32,8 @@ app.use(cookieParser());
 // parses incoming JSON payloads in the body of HTTP requests
 // and makes them available under req.body
 app.use(express.json());
+
+
 
 // Start express server and execute callback
 const server = app.listen(port, () => {
