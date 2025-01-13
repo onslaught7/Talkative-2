@@ -28,7 +28,7 @@ app.use(
 // Mounting the cookieParser middleware to our express appication
 app.use(cookieParser());
 // Integrating th express.json middleware to our express application
-// parses incoming JSON payloads in the body of HTTP requests 
+// parses incoming JSON payloads in the body of HTTP requests
 // and makes them available under req.body
 app.use(express.json());
 
