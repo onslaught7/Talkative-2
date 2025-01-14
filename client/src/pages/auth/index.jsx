@@ -5,7 +5,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Input } from '@/components/ui/input'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { useState } from 'react'
-import { FaGoogle } from "react-icons/fa";
+import { FaGoogle } from "react-icons/fa"
+import { toast } from 'sonner'
+import { apiClient } from '../../lib/api-client'
+import { SIGNUP_ROUTE } from '../../utils/constants.js'
 
 
 const Auth = () => {
@@ -14,13 +17,34 @@ const Auth = () => {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
 
-    const handleLogin = () => {}
+    const validateSignup = () => {
+        if (!email.length) {
+            toast.error("Email is required");
+            return false;
+        }
+        if (!password.length) {
+            toast.error("Password is required");
+            return false;
+        }
+        if (password !== confirmPassword) {
+            toast.error("Passwords don't match");
+            return false;
+        }
+        return true;
+    }
 
-    const handleSignup = () => {}
+    const handleLogin = async () => {}
 
-    const handleGoogleLogin = () => {}
+    const handleSignup = async () => {
+        if (validateSignup()) {
+            const response = await apiClient.post(SIGNUP_ROUTE, {email, password});
+            console.log({ response });
+        }
+    }
 
-    const handleGoogleSignup = () => {}
+    const handleGoogleLogin = async () => {}
+
+    const handleGoogleSignup = async () => {}
 
   return (
     <div className="h-[100vh] w-[100vw] flex items-center justify-center">

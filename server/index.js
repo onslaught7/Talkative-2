@@ -20,7 +20,7 @@ const databaseURL = process.env.DATABASE_URL;
 // Configuring the cors middleware and mounting it to our express application 
 app.use(
     cors({
-        origin: [process.env.ORIGIN],
+        origin: process.env.ORIGIN,
         methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
         credentials: true
     })
@@ -33,7 +33,8 @@ app.use(cookieParser());
 // and makes them available under req.body
 app.use(express.json());
 
-
+// Call the authRoutes method to handle /api/auth route
+app.use("/api/auth", authRoutes);
 
 // Start express server and execute callback
 const server = app.listen(port, () => {

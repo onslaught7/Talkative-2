@@ -1,5 +1,9 @@
 import User from '../models/UserModel.js'
 import jwt from 'jsonwebtoken'
+import dotenv from 'dotenv';
+
+dotenv.config();
+
 
 const maxAge = 3 * 24 * 60 * 60 * 1000;
 
