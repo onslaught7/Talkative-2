@@ -9,14 +9,20 @@ import { FaGoogle } from "react-icons/fa"
 import { toast } from 'sonner'
 import { apiClient } from '../../lib/api-client'
 import { SIGNUP_ROUTE, LOGIN_ROUTE } from '../../utils/constants.js'
+import { useNavigate } from 'react-router-dom';
 
 
 const Auth = () => {
+    // useNavigate is a hook from React Router that allows navigation to different routes in the app
+    const navigate = useNavigate();
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
 
+    // Function to validate login form inputs
+    // Checks if email and password fields are not empty
+    // Displays a toast error message if any field is empty
     const validateLogin = () => {
         if (!email.length) {
             toast.error("Email is required");
@@ -29,6 +35,10 @@ const Auth = () => {
         return true;
     }
 
+    // Function to validate signup form inputs
+    // Checks if email, password, and confirmPassword fields are not empty
+    // Checks if password and confirmPassword match
+    // Displays a toast error message for each invalid condition
     const validateSignup = () => {
         if (!email.length) {
             toast.error("Email is required");
@@ -46,24 +56,54 @@ const Auth = () => {
     }
 
     const handleLogin = async () => {
-        if (validateLogin()) {
-            const response = await apiClient.post(
-                LOGIN_ROUTE,
-                { email, password },
-                { withCredentials: true }
-            );
-            console.log({ response });
+        // The LOGIN_ROUTE is hit from constants.js and the login is 
+        // handled in AuthConteroller through authRoutes.js 
+        try {
+            if (validateLogin()) {
+                const response = await apiClient.post(
+                    LOGIN_ROUTE,
+                    { email, password },
+                    { withCredentials: true }
+                );
+
+                if (response.data.user.id) {
+                    if (response.data.user.profileSetup) {
+                        navigate("/chat");
+                    } else {
+                        navigate("/profile");
+                    }
+                } 
+                console.log({ response });
+            }
+        } catch (error) {
+            if (error.response && error.response.status === 400) {
+                toast.error("Email and Password combination is incorrect");
+            } else {
+                console.error("An unexpected error occurred:", error);
+            }
         }
     }
 
     const handleSignup = async () => {
-        if (validateSignup()) {
-            const response = await apiClient.post(
-                SIGNUP_ROUTE, 
-                {email, password},
-                { withCredentials: true }
-            );
-            console.log({ response });
+        try {
+            if (validateSignup()) {
+                const response = await apiClient.post(
+                    SIGNUP_ROUTE, 
+                    {email, password},
+                    { withCredentials: true }
+                );
+
+                if (response.status === 201) {
+                    navigate("/profile");
+                }
+                console.log({ response });
+            }
+        } catch (error) {
+            if (error.response && error.response.status === 400) {
+                toast.error("Email and Password combination is incorrect");
+            } else {
+                console.error("An unexpected error occurred:", error);
+            }
         }
     }
 
@@ -87,7 +127,7 @@ const Auth = () => {
                     </p>
                 </div>
                 <div className="flex items-center justify-center w-full">
-                    <Tabs defaultValue="account" className="w-3/4">
+                    <Tabs defaultValue="login" className="w-3/4">
                         <TabsList className="bg-transparent rounded-none w-full">
                             <TabsTrigger 
                             value="login"
