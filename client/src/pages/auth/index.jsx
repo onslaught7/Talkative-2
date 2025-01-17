@@ -10,12 +10,14 @@ import { toast } from 'sonner'
 import { apiClient } from '../../lib/api-client'
 import { SIGNUP_ROUTE, LOGIN_ROUTE } from '../../utils/constants.js'
 import { useNavigate } from 'react-router-dom';
+import { useAppStore } from '../../store/index.js'
 
 
 const Auth = () => {
     // useNavigate is a hook from React Router that allows navigation to different routes in the app
     const navigate = useNavigate();
 
+    const { setUserInfo } = useAppStore();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -67,6 +69,7 @@ const Auth = () => {
                 );
 
                 if (response.data.user.id) {
+                    setUserInfo(response.data.user);
                     if (response.data.user.profileSetup) {
                         navigate("/chat");
                     } else {
@@ -94,6 +97,7 @@ const Auth = () => {
                 );
 
                 if (response.status === 201) {
+                    setUserInfo(response.data.user);
                     navigate("/profile");
                 }
                 console.log({ response });
