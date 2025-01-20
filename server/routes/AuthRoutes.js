@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { signup, login, getUserInfo } from '../controllers/AuthController.js'
+import { signup, login, getUserInfo, updateProfile } from '../controllers/AuthController.js'
 import { verifyToken } from '../middlewares/AuthMiddleware.js';
 
 // Creating a new instance of a router
@@ -11,5 +11,6 @@ authRoutes.post("/signup", signup);
 authRoutes.post("/login", login);
 // verifyToken is the middleware
 authRoutes.get("/user-info", verifyToken, getUserInfo);
+authRoutes.post("/update-profile", verifyToken, updateProfile)
 
 export default authRoutes;
