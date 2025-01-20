@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useAppStore } from '@/store'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -21,6 +21,10 @@ const Profile = () => {
   const [image, setImage] = useState(null);
   const [hovered, setHovered] = useState(false);
   const [selectColor, setSelectColor] = useState(0);
+
+  // returns a mutable object called ref that holds a current property
+  // Create a reference for the file input element
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     if (userInfo.profileSetup) {
@@ -61,6 +65,11 @@ const Profile = () => {
     } else {
       toast.error("Please setup profile.");
     }
+  }
+
+  const handleFileInputClick = () => {
+    // Access the current DOM element assigned to fileInputRef and trigger a click
+    fileInputRef.current.click();
   }
 
   return (
