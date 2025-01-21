@@ -26,6 +26,9 @@ app.use(
     })
 );
 
+// Serve static files from the "uploads/profiles" directory when the "/uploads/profiles" URL is accessed
+app.use("/uploads/profiles", express.static("uploads/profiles"));
+
 // Mounting the cookieParser middleware to our express appication
 app.use(cookieParser());
 // Integrating th express.json middleware to our express application
