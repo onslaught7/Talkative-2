@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { toast } from 'sonner'
 import { apiClient } from '../../lib/api-client'
-import { UPDATE_PROFILE_ROUTE } from '../../utils/constants'
+import { ADD_PROFILE_IMAGE_ROUTE, UPDATE_PROFILE_ROUTE } from '../../utils/constants'
 // import { FaPlus } from "react-icons/fa"
 
 const Profile = () => {
@@ -72,6 +72,35 @@ const Profile = () => {
     fileInputRef.current.click();
   }
 
+  const handleImageChange = async (event) => {
+    const file = event.target.files[0];
+    console.log({file});
+
+    if (file) {
+      const formData = new FormData();
+      formData.append("profile-image", file);
+      const response = await apiClient.post(
+        ADD_PROFILE_IMAGE_ROUTE, 
+        formData,
+        { withCredentials: true }
+      );
+
+      if (response.data.status === 200 && response.data.image) {
+        setUserInfo({...userInfo, image: response.data.image });
+        toast.success("Profile image updated successfully");
+      }
+
+      // const reader = new FileReader();
+      // reader.onload = () => {
+      //   setImage(reader.result);
+      // }
+
+      // reader.readAsDataURL(file);
+    }
+  }
+
+  const handleDeleteImage = async () => {}
+
   return (
     <div className="bg-[#1b1c24] h-[100vh] flex items-center justify-center flex-col gap-10">
       <div className="flex flex-col gap-10 w-[80vw] md:w-max">
@@ -101,7 +130,10 @@ const Profile = () => {
             </Avatar>
             {
               hovered && (
-                <div className='absolute inset-0 flex items-center justify-center bg-black/50 rounded-full'>
+                <div 
+                  className='absolute inset-0 flex items-center justify-center bg-black/50 rounded-full' 
+                  onClick={image ? handleDeleteImage : handleFileInputClick}
+                >
                   {
                     image ? (
                       <FaTrash className='text-white text-3xl cursor-pointer'/> 
@@ -112,8 +144,15 @@ const Profile = () => {
                 </div>
               )
             }
+            <input 
+              type='file' 
+              ref={fileInputRef} 
+              className='hidden' 
+              onChange={handleImageChange} 
+              name="profile-image"
+              accept='.png, .jpg, .jpeg, .webp, .svg'
+            />
           </div>
-          {/* <input/> */}
           <div className='flex m-w-32 md:m-w-64 flex-col gap-5 text-white items-center justify-center'>
             <div className='w-full'>
               <Input 
