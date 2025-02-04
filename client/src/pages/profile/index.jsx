@@ -1,16 +1,15 @@
-import React, { useEffect, useRef } from 'react'
-import { useAppStore } from '@/store'
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { IoArrowBack } from 'react-icons/io5'
-import { Avatar } from '@/components/ui/avatar'
-import { colors, getColor } from '../../lib/utils'
-import { FaTrash, FaPlus } from "react-icons/fa"
-import { Input } from "@/components/ui/input"
+import { Avatar, AvatarImage } from '@/components/ui/avatar'
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { useAppStore } from '@/store'
+import React, { useEffect, useRef, useState } from 'react'
+import { FaPlus, FaTrash } from "react-icons/fa"
+import { IoArrowBack } from 'react-icons/io5'
+import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { apiClient } from '../../lib/api-client'
-import { ADD_PROFILE_IMAGE_ROUTE, UPDATE_PROFILE_ROUTE } from '../../utils/constants'
+import { colors, getColor } from '../../lib/utils'
+import { ADD_PROFILE_IMAGE_ROUTE, HOST, UPDATE_PROFILE_ROUTE, REMOVE_PROFILE_IMAGE_ROUTE } from '../../utils/constants'
 // import { FaPlus } from "react-icons/fa"
 
 const Profile = () => {
@@ -27,10 +26,15 @@ const Profile = () => {
   const fileInputRef = useRef(null);
 
   useEffect(() => {
+    // Runs whenever userInfo changes
     if (userInfo.profileSetup) {
+      // If the user has set up their profile, update state variables
       setFirstName(userInfo.firstName);
       setLastName(userInfo.lastName);
       setSelectColor(userInfo.color);
+    }
+    if (userInfo.image) {
+      setImage(`${HOST}/${userInfo.image}`);
     }
   }, [userInfo]);
 
@@ -77,29 +81,44 @@ const Profile = () => {
     console.log({file});
 
     if (file) {
+      // Create a FormData object to send the file in an HTTP request
       const formData = new FormData();
-      formData.append("profile-image", file);
+      formData.append("profile-image", file); // Append the file with the key "profile-image"
+
+      // Send the file to the server using an API client
       const response = await apiClient.post(
         ADD_PROFILE_IMAGE_ROUTE, 
         formData,
-        { withCredentials: true }
+        { withCredentials: true } // Ensures cookies are sent with the request (for authentication)
       );
 
-      if (response.data.status === 200 && response.data.image) {
+      if (response.status === 200 && response.data.image) {
         setUserInfo({...userInfo, image: response.data.image });
         toast.success("Profile image updated successfully");
       }
 
-      // const reader = new FileReader();
-      // reader.onload = () => {
-      //   setImage(reader.result);
-      // }
-
-      // reader.readAsDataURL(file);
+      
     }
   }
 
-  const handleDeleteImage = async () => {}
+  const handleDeleteImage = async () => {
+    try {
+      // Send a DELETE request to the backend to remove the user's profile image
+      // `withCredentials: true` ensures that cookies (e.g., authentication tokens) are sent along with the request
+      const response = await apiClient.delete(REMOVE_PROFILE_IMAGE_ROUTE, {
+        withCredentials: true,
+      });
+
+      if (response.status === 200) {
+        // This ensures that the UI reflects the updated user info after deletion
+        setUserInfo({ ...userInfo, image: null });
+        toast.success("Image removed successfully.");
+        setImage(null);
+      }
+    } catch(error) {
+      console.log(error);
+    }
+  }
 
   return (
     <div className="bg-[#1b1c24] h-[100vh] flex items-center justify-center flex-col gap-10">
@@ -144,6 +163,7 @@ const Profile = () => {
                 </div>
               )
             }
+            {/* accept image inputs */}
             <input 
               type='file' 
               ref={fileInputRef} 
