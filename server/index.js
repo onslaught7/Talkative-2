@@ -1,7 +1,7 @@
-import express from 'express'
-import cors from 'cors'
-import cookieParser from 'cookie-parser'
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
 import dotenv from 'dotenv';
+import express from 'express';
 import mongoose from 'mongoose';
 import authRoutes from './routes/AuthRoutes.js';
 // The below hierarchy is to be maintained
