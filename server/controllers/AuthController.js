@@ -1,7 +1,8 @@
-import User from '../models/UserModel.js'
-import jwt from 'jsonwebtoken'
-import dotenv from 'dotenv'
-import { compare } from 'bcrypt'
+import { compare } from 'bcrypt';
+import dotenv from 'dotenv';
+import { renameSync, unlinkSync } from 'fs'; // synchronous file system method to rename files
+import jwt from 'jsonwebtoken';
+import User from '../models/UserModel.js';
 
 dotenv.config();
 
@@ -149,32 +150,27 @@ export const updateProfile = async (request, response, next) => {
 
 export const addProfileImage = async (request, response, next) => {
     try {
-        const { userId } = request;
-        const { firstName, lastName, color } = request.body;
-
-        if (!firstName) {
-            return response.status(400).send("First Name and color are required.");
+        if (!request.file) {
+            return response.status(400).send("File is required.")
         }
-        
-        const userData = await User.findByIdAndUpdate(
-            userId, 
-            {
-                firstName, lastName, color, profileSetup:true
-            },  
-            { 
-                new:true, runValidators:true 
-            }
+
+        const date = Date.now();
+        let fileName = "uploads/profiles/" + date + request.file.originalname;
+        // Used to rename or move files synchronously
+        // Rename the uploaded file from its temporary location to the desired folder with a unique name
+        renameSync(request.file.path, fileName);
+
+        const updatedUser = await User.findByIdAndUpdate(
+            request.userId,
+            { image: fileName },
+            { new: true, runValidators: true } // new: true Returns the updated document instead of the old one  
+            // validate schema  
         );
 
         return response.status(200).json({
-            id: userData.id,
-            email: userData.email,
-            firstName: userData.firstName,
-            lastName: userData.lastName,
-            image: userData.image,
-            color: userData.color,
-            profileSetup: userData.profileSetup
-        })
+            image: updatedUser.image,
+        });
+
     } catch (error) {
         console.log({ error });
         return response.status(500).send("Internal Server Error");
@@ -184,31 +180,23 @@ export const addProfileImage = async (request, response, next) => {
 export const removeProfileImage = async (request, response, next) => {
     try {
         const { userId } = request;
-        const { firstName, lastName, color } = request.body;
+        const user = await User.findById(userId);
 
-        if (!firstName) {
-            return response.status(400).send("First Name and color are required.");
+        if (!user) {
+            return response.status(404).send("User not found.")
         }
-        
-        const userData = await User.findByIdAndUpdate(
-            userId, 
-            {
-                firstName, lastName, color, profileSetup:true
-            },  
-            { 
-                new:true, runValidators:true 
-            }
-        );
 
-        return response.status(200).json({
-            id: userData.id,
-            email: userData.email,
-            firstName: userData.firstName,
-            lastName: userData.lastName,
-            image: userData.image,
-            color: userData.color,
-            profileSetup: userData.profileSetup
-        })
+        if (user.image) {
+            // If the user has an image, delete the image file from the server's storage using `unlinkSync`
+            // `unlinkSync` is a synchronous method from the `fs` (filesystem) module that deletes a file
+            unlinkSync(user.image)
+        }
+
+        // Save the updated user document to the database after setting the image to null
+        user.image = null;
+        await user.save();
+
+        return response.status(200).send("Profile image removed successfully.")
     } catch (error) {
         console.log({ error });
         return response.status(500).send("Internal Server Error");
