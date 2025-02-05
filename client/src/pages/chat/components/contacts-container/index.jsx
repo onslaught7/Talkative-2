@@ -16,8 +16,8 @@ const ContactsContainer = () => {
         </div>
       </div>
     )
-  }
-  
+}
+
 export default ContactsContainer;
 
 const Logo = () => {
