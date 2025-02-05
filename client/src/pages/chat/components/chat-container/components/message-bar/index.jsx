@@ -61,7 +61,15 @@ const MessageBar = () => {
           >
             <RiEmojiStickerLine className="text-2xl"/>
           </button>
-          <div className="absolute bottom-16 right-0" ref={emojiRef}>
+          <div
+        className={`absolute bottom-16 right-0 transition-transform duration-300 ease-in-out ${
+            // Conditional classes based on the emojiPickerOpen state
+            emojiPickerOpen 
+            ? 'transform translate-y-0 opacity-100' // When open, use translate-y-0 and full opacity
+            : 'transform translate-y-[150px] opacity-0'   // When closed, use translate-y-4 and 0 opacity
+            }`}
+            ref={emojiRef} // Reference to emoji picker container
+          >
             <EmojiPicker theme="dark"
               open={emojiPickerOpen}
               onEmojiClick={handleAddEmoji}

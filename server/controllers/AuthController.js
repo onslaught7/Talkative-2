@@ -202,3 +202,22 @@ export const removeProfileImage = async (request, response, next) => {
         return response.status(500).send("Internal Server Error");
     }
 }
+
+export const logout = async (request, response, next) => {
+    try {
+        // Clear the JWT cookie by setting it to an empty string and setting a maxAge of 1 millisecond (which expires it immediately)
+        response.cookie(
+            "jwt", 
+            "",  
+            { 
+                maxAge: 1, // Set the cookie's expiration time to 1 millisecond, effectively expiring it immediately
+                secure: true, // Ensure the cookie is only sent over HTTPS (i.e., secure cookies)
+                sameSite: "None" // Allow the cookie to be sent across different sites (for cross-origin requests)
+            }) ;
+        return response.status(200).send("Logged out successfully.");
+    } catch (error) {
+        console.log({ error });
+        return response.status(500).send("Internal Server Error");
+    }
+}
+
