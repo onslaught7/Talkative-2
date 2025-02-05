@@ -9,7 +9,6 @@ const MessageBar = () => {
   const emojiRef = useRef();
   const emojiButtonRef = useRef();
 
-  
   const [message, setMessage] = useState("");
   const [emojiPickerOpen, setEmojiPickerOpen] = useState(false);
 
