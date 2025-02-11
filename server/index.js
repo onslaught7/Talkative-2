@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import express from 'express';
 import mongoose from 'mongoose';
 import authRoutes from './routes/AuthRoutes.js';
+import contactRoutes from './routes/ContactsRoutes.js';
 // The below hierarchy is to be maintained
 
 // Loads the .env files and adds the files to the variable process.env
@@ -36,8 +37,9 @@ app.use(cookieParser());
 // and makes them available under req.body
 app.use(express.json());
 
-// Call the authRoutes method to handle /api/auth route
+// Call the authRoutes method to handle /api/auth route and /api/contacts route
 app.use("/api/auth", authRoutes);
+app.use("/api/contacts", contactRoutes);
 
 // Start express server and execute callback
 const server = app.listen(port, () => {
