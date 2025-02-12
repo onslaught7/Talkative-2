@@ -5,6 +5,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import authRoutes from './routes/AuthRoutes.js';
 import contactRoutes from './routes/ContactsRoutes.js';
+import setupSocket from './socket.js';
 // The below hierarchy is to be maintained
 
 // Loads the .env files and adds the files to the variable process.env
@@ -37,7 +38,8 @@ app.use(cookieParser());
 // and makes them available under req.body
 app.use(express.json());
 
-// Call the authRoutes method to handle /api/auth route and /api/contacts route
+// Call the authRoutes method to handle /api/auth route and 
+// contactRoutes method to handle /api/contacts route
 app.use("/api/auth", authRoutes);
 app.use("/api/contacts", contactRoutes);
 
@@ -46,6 +48,9 @@ const server = app.listen(port, () => {
     console.log(`App is running at http://localhost:${port}`);
 });
 
+// Call setupSocket to enable WebSocket functionality
+setupSocket(server);
+ 
 // Establishing the conection to the database using url from .env
 mongoose.connect(databaseURL).then(() => {
     console.log("mongoDB database connection successful");
