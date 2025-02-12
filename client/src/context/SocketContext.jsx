@@ -3,32 +3,34 @@ import { useAppStore } from "@/store/index.js"
 import { HOST } from "@/utils/constants.js"
 import { io } from "socket.io-client"
 
+// Create WebSocket context
 const SocketContext = createContext(null);
 
-
+// Custom hook for easy access to socket
 export const useSocket = () => {
     return useContext(SocketContext);
 };
 
 export const SocketProvider = ({ children }) => {
-    const socket = useRef();
+    const socket = useRef(); // Store the socket instance, so it doesn't reset on re-renders
     const { userInfo } = useAppStore();
 
     useEffect(() => {
         if (userInfo) {
+            // Establish socket connection
             socket.current = io(HOST, {
-                withCredentials: true,
-                query: { userId: userInfo.id },
+                withCredentials: true, // Include authentication cookies
+                query: { userId: userInfo.id }, // Send user ID to server
             });
             socket.current.on("connect", () => {
                 console.log("Connected to socket server");
             });
 
             return () => {
-                socket.current.disconnect();
+                socket.current.disconnect(); // Cleanup on unmount
             };
         }
-    }, [userInfo]);
+    }, [userInfo]); // Re-run effect when userInfo changes
 
     return (
         <SocketContext.Provider value = {socket.current}>

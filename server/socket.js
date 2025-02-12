@@ -1,4 +1,5 @@
 import { Server as SocketIOServer } from "socket.io";
+import Message from "./models/MessagesModel.js";
 
 // Function to set up WebSocket communication
 const setupSocket = (server) => {
@@ -28,6 +29,13 @@ const setupSocket = (server) => {
         }
     }
 
+    const sendMessage = async (message) => {
+        const senderScoketId = userSocketMap.get(message.sender);
+        const recipientSocketId = userSocketMap.get(message.recipient);
+
+        const createdMessage = await Message.create(message);
+    };
+
     // Handle new client connections
     io.on("connection", (socket) => {
         // Extract user ID from connection query
@@ -41,6 +49,7 @@ const setupSocket = (server) => {
             console.log("User id not provided during connection.");
         }
 
+        socket.on("sendMessage", sendMessage)
         // Handle client disconnection
         socket.on("disconnect", () => disconnect(socket)); 
     });
