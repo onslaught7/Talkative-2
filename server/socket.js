@@ -8,7 +8,7 @@ const setupSocket = (server) => {
         cors: {
             origin: process.env.ORIGIN,
             methods: ["GET", "POST"],
-            withCredentials: true,
+            credentials: true,
         },
     });
 
