@@ -26,6 +26,19 @@ export const SocketProvider = ({ children }) => {
                 console.log("Connected to socket server");
             });
 
+            const handleRecieveMessage = (message) => {
+                // getState() allows you to access the store's current state outside of a React component or hook
+                // Unlike useAppStore(), which is a React hook and must be used within a component or hook function
+                const { selectedChatData, selectedChatType, addMessage } = useAppStore.getState();
+
+                if (selectedChatType !== undefined && (selectedChatData._id === message.sender._id || selectedChatData._id === message.recipient._id)) {
+                    console.log("message recieved", message);
+                    addMessage(message);
+                }
+            }
+
+            socket.current.on("receiveMessage", handleRecieveMessage);
+
             return () => {
                 socket.current.disconnect(); // Cleanup on unmount
             };
