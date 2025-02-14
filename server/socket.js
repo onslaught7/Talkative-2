@@ -30,10 +30,27 @@ const setupSocket = (server) => {
     }
 
     const sendMessage = async (message) => {
-        const senderScoketId = userSocketMap.get(message.sender);
+        // Retirieve the sender's and recipient's websocket session IDs from the user-socket mapping
+        const senderSocketId = userSocketMap.get(message.sender);
         const recipientSocketId = userSocketMap.get(message.recipient);
 
+        // Store the new message in the MongoDB database
         const createdMessage = await Message.create(message);
+        
+        // Retrieve the full message details, including sender and recipient information
+        const messageData = await Message.findById(createdMessage._id)
+            .populate("sender", "id email firstName lastName image color") // Fetch sender's details
+            .populate("recipient", "id email firstName lastName image color"); // Fetch recipient's details
+
+        // Send the message to the recipient's socket if they are online
+        if (recipientSocketId) {
+            io.to(recipientSocketId).emit("receiveMessage", messageData);
+        }
+
+        // Send the message to the sender's socket for UI update
+        if (senderSocketId) { 
+            io.to(senderSocketId).emit("receiveMessage", messageData);
+        }
     };
 
     // Handle new client connections
