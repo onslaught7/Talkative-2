@@ -32,6 +32,10 @@ const ProfileInfo = () => {
     }
   }
 
+  // console.log(userInfo.firstName)
+  // console.log(userInfo.firstName.split(""))
+  // console.log(userInfo.firstName.split("").shift())
+
   return (
     <div className="absolute bottom-0 h-16 flex items-center justify-between px-10 w-full bg-[#2a2b33]">
       <div className="flex gap-3 items-center justify-center">

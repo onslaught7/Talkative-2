@@ -37,28 +37,28 @@ export const searchContacts = async (request, response, next) => {
 
 export const getContactsForDMList = async (request, response, next) => {
     try {
-        let { userId } = request;
-        userId = new mongoose.Types.ObjectId(userId);
+        let { userId } = request; // Extract userId from request
+        userId = new mongoose.Types.ObjectId(userId); // Convert to MongoDB ObjectId
 
         const contacts = await Message.aggregate([
             {
                 $match: {
-                    $or: [{ sender: userId }, { recipient: userId }],
+                    $or: [{ sender: userId }, { recipient: userId }], // Find messages where user is sender or recipient
                 },
             },
             {
-                $sort: { timestamp: -1 },
+                $sort: { timestamp: -1 }, // Sort by latest messages first
             },
             {
                 $group: {
                     _id: {
                         $cond: {
-                            if: { $eq: ["$sender", userId] },
+                            if: { $eq: ["$sender", userId] }, // Determine the other user
                             then: "$recipient",
                             else: "$sender",
                         },   
                     },
-                    lastMessageTime: { $first: "$timestamp" },
+                    lastMessageTime: { $first: "$timestamp" }, // Store the most recent message time
                 },
             },
             {
@@ -66,24 +66,36 @@ export const getContactsForDMList = async (request, response, next) => {
                     from: "users",
                     localField: "_id",
                     foreignField: "_id",
-                    as: "container",
+                    as: "contactInfo", // Fetch user details
                 },
             },
             {
+                // $project: {
+                //     _id: 1,
+                //     lastMessageTime: 1,
+                //     email: "$contactInfo.email",
+                //     firstName: "$contactInfo.firstName",
+                //     lastName: "$contactInfo.lastName",
+                //     image: "$contactInfo.image",
+                //     color: "$contactInfo.color",
+                // },
                 $project: {
                     _id: 1,
                     lastMessageTime: 1,
-                    email: "$contactInfo.email",
-                    firstName: "$contactInfo.firstName",
-                    lastName: "$contactInfo.lastName",
-                    image: "$contactInfo.image",
-                    color: "$contactInfo.color",
-                },
+                    email: { $arrayElemAt: ["$contactInfo.email", 0] },
+                    firstName: { $arrayElemAt: ["$contactInfo.firstName", 0] },
+                    lastName: { $arrayElemAt: ["$contactInfo.lastName", 0] },
+                    image: { $arrayElemAt: ["$contactInfo.image", 0] },
+                    color: { $arrayElemAt: ["$contactInfo.color", 0] },
+                }
             },
-            {
-                $sort: { lastMessageTime: -1 },
+            { 
+                $sort: { lastMessageTime: -1 }, // Sort contacts by last interaction
             },
         ])
+
+        // console.log("ContactsConteroller, contacts: ");
+        // console.log(contacts)
 
         return response.status(200).json({ contacts });
     } catch (error) {
