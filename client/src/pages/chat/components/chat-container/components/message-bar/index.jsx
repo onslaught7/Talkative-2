@@ -47,6 +47,8 @@ const MessageBar = () => {
         messageType: "text",
         fileUrl: undefined,
       });
+
+      setMessage(""); // Clear input field after sending
     }
   }
 
@@ -59,6 +61,7 @@ const MessageBar = () => {
           placeholder="Message"
           value={message}
           onChange={(e) => setMessage(e.target.value)} // Update state on user input
+          onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
         />
         <button className='text-neutral-500 focus:border-none focus:outline-none focus:text-white duration-300 transition-all'
           // onClick={}

@@ -21,7 +21,7 @@ import { apiClient } from "@/lib/api-client.js"
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Avatar, AvatarImage } from '@/components/ui/avatar'
 import { getColor } from "@/lib/utils.js"
-import { HOST } from "@/utils/constants"
+import { HOST } from "@/utils/constants.js"
 import { useAppStore } from "@/store/index.js"
 
 const NewDM = () => {

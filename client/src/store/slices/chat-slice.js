@@ -6,11 +6,13 @@ export const createChatSlice = (set,get) => ({
     selectedChatData: undefined,
 
     selectedChatMessages: [],
+    directMessagesContacts: [],
 
     // Functions to update the states
     setSelectedChatType: (selectedChatType) => set({ selectedChatType }),
     setSelectedChatData: (selectedChatData) => set({ selectedChatData }),
     setSelectedChatMessages: (selectedChatMessages) => set({ selectedChatMessages }),
+    setDirectMessagesContacts: (directMessagesContacts) => set({ directMessagesContacts }),
 
     // Function to reset the chat state (e.g., when the chat is closed)
     closeChat: () => set(
