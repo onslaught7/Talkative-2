@@ -5,10 +5,14 @@ import { IoSend } from 'react-icons/io5'
 import EmojiPicker from 'emoji-picker-react'
 import { useAppStore } from "@/store"
 import { useSocket } from "@/context/SocketContext"
+import { apiClient } from "@/lib/api-client.js"
+import { UPLOAD_FILE_ROUTE } from "@/utils/constants"
 
 
 const MessageBar = () => {
   const emojiRef = useRef();
+  // Create a reference for the hidden file input
+  const fileInputRef = useRef();
   const emojiButtonRef = useRef();
   const {selectedChatType, selectedChatData, userInfo} = useAppStore();
   const socket = useSocket();
@@ -52,6 +56,48 @@ const MessageBar = () => {
     }
   }
 
+  // Triggers the hidden file input when the button is clicked
+  const handleAttachmentClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  }
+
+  // Handles file selection and upload
+  const handleAttachmentChange = async (event) => {
+    try {
+      const file = event.target.files[0];
+      // console.log({file})
+
+      if (file) {
+        const formData = new FormData();
+        formData.append("file", file); // "file" key as of backend expectation (Multer)
+
+        const response = await apiClient.post(
+          UPLOAD_FILE_ROUTE,
+          formData,
+          { withCredentials: true }, // Ensure authentication credentials are included
+        );
+
+        if (response.status === 200 && response.data) {
+          if (selectedChatType === "contact") {
+            socket.emit("sendMessage", {
+              sender: userInfo.id,
+              content: undefined,
+              recipient: selectedChatData._id,
+              messageType: "file",
+              fileUrl: response.data.filePath, // File path from server response
+            });
+          }
+        }
+      }
+
+    } catch(error) {
+      console.log({ error });
+    }
+  }
+
+
   return (
     <div className="h-[10vh] bg-[#1c1d25] flex justify-center items-center px-8 mb-6 gap-6">
       <div className="flex-1 flex bg-[#2a2b33] rounded-md items-center gap-5 pr-5">
@@ -64,10 +110,12 @@ const MessageBar = () => {
           onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
         />
         <button className='text-neutral-500 focus:border-none focus:outline-none focus:text-white duration-300 transition-all'
-          // onClick={}
+          onClick={handleAttachmentClick}
         >
           <GrAttachment className="text-2xl"/>
         </button>
+        {/* Hidden file input */}
+        <input type="file" className="hidden" ref={fileInputRef} onChange={handleAttachmentChange}/>
         <div className="relative">
           <button className='text-neutral-500 focus:border-none focus:outline-none focus:text-white duration-300 transition-all'
             onClick={() => setEmojiPickerOpen(prev => !prev)}
