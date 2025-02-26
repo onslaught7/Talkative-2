@@ -2,7 +2,9 @@ import { useAppStore } from "@/store";
 import moment from 'moment';
 import { useEffect, useRef } from "react";
 import { apiClient } from '@/lib/api-client.js'
-import { GET_ALL_MESSAGES_ROUTE } from "@/utils/constants";
+import { HOST, GET_ALL_MESSAGES_ROUTE } from "@/utils/constants";
+import { MdFolderZip } from "react-icons/md"
+import { IoMdArrowRoundDown } from "react-icons/io";
 
 const MessageContainer = () => {
   // Create a ref to track the last message for auto-scrolling
@@ -50,6 +52,13 @@ const MessageContainer = () => {
     }
   }, [selectedChatMessages]);
 
+  // Returns true if the filePath matches the regex
+  const checkIfImage = (filePath) => {
+    const imageRegex = /\.(jpg|jpeg|png|gif|bmp|webp|svg|tif|tiff|webp|svg|ico|heic|heif)$/i; // Case-insensitive match
+    return imageRegex.test(filePath);
+  };
+
+
   const renderMessages = () => {
     let lastDate = null; // Track the last message date to show date separators
     return selectedChatMessages.map((message, index) => {
@@ -85,13 +94,44 @@ const MessageContainer = () => {
         {
           message.messageType === "text" && (
             <div 
-            className={
+              className={
               `${message.sender !== selectedChatData._id 
               ? "bg-[#8417ff]/5 text-[#8417ff]/90 border-[#8417ff]/50" 
               : "bg-[#2a2b33]/5 text-white/80 border-white/20"}
               border inline-block p-4 rounded my-1 max-w-[50%] break-words`
               }>
               {message.content}
+            </div>
+          )
+        }
+        {
+          message.messageType === "file" && (
+            <div 
+                className={
+                `${message.sender !== selectedChatData._id 
+                ? "bg-[#8417ff]/5 text-[#8417ff]/90 border-[#8417ff]/50" 
+                : "bg-[#2a2b33]/5 text-white/80 border-white/20"}
+                border inline-block p-4 rounded my-1 max-w-[50%] break-words`
+                }>
+                {
+                  checkIfImage(message.fileUrl)
+                  ? <div className="cursor-pointer">
+                    <img 
+                      src={`${HOST}/${message.fileUrl}`}
+                      height={300}
+                      width={300}
+                    />
+                  </div>
+                  : <div className="flex items-center justify-center gap-4">
+                    <span className="text-white/8 text-3xl bg-black/20 rounded-full p-3">
+                      <MdFolderZip />
+                    </span>
+                    <span>{message.fileUrl.split('/').pop()}</span>
+                    <span>
+                      <IoMdArrowRoundDown />
+                    </span>
+                  </div>
+                }
             </div>
           )
         }
