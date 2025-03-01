@@ -10,3 +10,5 @@ Currently, two official plugins are available:
 <!-- 
 git checkout master
 git pull origin master -->
+
+Apply large file direct sharing, a file being uploaded from one side and is directly being accessed on the other
