@@ -6,7 +6,7 @@ import { HOST, GET_ALL_MESSAGES_ROUTE } from "@/utils/constants";
 import { MdFolderZip } from "react-icons/md"
 import { IoMdArrowRoundDown } from "react-icons/io";
 import { IoCloseSharp } from 'react-icons/io5'
-import { motion } from "framer-motion";
+import { motion, progress } from "framer-motion";
 
 const MessageContainer = () => {
   // Create a ref to track the last message for auto-scrolling
@@ -19,6 +19,8 @@ const MessageContainer = () => {
     userInfo, 
     selectedChatMessages,
     setSelectedChatMessages,
+    setFileDownloadProgress,
+    setIsDownloading,
   } = useAppStore();
 
   const [showImage, setShowImage] = useState(false);
@@ -64,9 +66,18 @@ const MessageContainer = () => {
   };
 
   const downloadFile = async (url) => {
+    setIsDownloading(true);
+    setFileDownloadProgress(0);
     const response = await apiClient.get(
       `${HOST}/${url}`,
-      { responseType: "blob" }
+      { 
+        responseType: "blob", 
+        onDownloadProgress: (progressEvent) => {
+          const { loaded, total} = progressEvent;
+          const percentCompleted = Math.round((loaded * 100)/total);
+          setFileDownloadProgress(percentCompleted);
+        }
+      }
     );
 
     const urlBlob = window.URL.createObjectURL(new Blob([response.data]));
@@ -77,6 +88,8 @@ const MessageContainer = () => {
     link.click();
     link.remove();
     window.URL.revokeObjectURL(urlBlob);
+    setIsDownloading(false);
+    setFileDownloadProgress(0);
   };
 
   const renderMessages = () => {

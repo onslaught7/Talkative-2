@@ -8,6 +8,23 @@ export const createChatSlice = (set,get) => ({
     selectedChatMessages: [],
     directMessagesContacts: [],
 
+    isUploading: false, // Boolean flag indicating whether a file is currently being uploaded
+    isDownloading: false, // Boolean flag indicating whether a file is currently being downloaded
+    fileUploadProgress: 0, // Upload progress percentage (0 - 100)
+    fileDownloadProgress: 0, // Download progress percentage (0 - 100)
+
+    setIsUploading: (isUploading) => set({ isUploading }), 
+    // Function to update the `isUploading` state
+
+    setIsDownloading: (isDownloading) => set({ isDownloading }), 
+    // Function to update the `isDownloading` state
+
+    setFileUploadProgress: (fileUploadProgress) => set({ fileUploadProgress }), 
+    // Function to update the `fileUploadProgress` state (e.g., 0% → 100%)
+
+    setFileDownloadProgress: (fileDownloadProgress) => set({ fileDownloadProgress }),
+    // Function to update the `fileDownloadProgress` state (e.g., 0% → 100%)
+     
     // Functions to update the states
     setSelectedChatType: (selectedChatType) => set({ selectedChatType }),
     setSelectedChatData: (selectedChatData) => set({ selectedChatData }),
