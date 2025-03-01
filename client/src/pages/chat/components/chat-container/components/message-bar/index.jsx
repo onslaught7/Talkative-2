@@ -14,7 +14,13 @@ const MessageBar = () => {
   // Create a reference for the hidden file input
   const fileInputRef = useRef();
   const emojiButtonRef = useRef();
-  const {selectedChatType, selectedChatData, userInfo} = useAppStore();
+  const {
+    selectedChatType, 
+    selectedChatData, 
+    userInfo, 
+    setIsUploading, 
+    setFileUploadProgress,
+  } = useAppStore();
   const socket = useSocket();
   
   const [message, setMessage] = useState("");
@@ -72,14 +78,23 @@ const MessageBar = () => {
       if (file) {
         const formData = new FormData();
         formData.append("file", file); // "file" key as of backend expectation (Multer)
-
+        setIsUploading(true);
         const response = await apiClient.post(
           UPLOAD_FILE_ROUTE,
-          formData,
-          { withCredentials: true }, // Ensure authentication credentials are included
+          formData, // The FormData object containing the file
+          { 
+            withCredentials: true, // Ensure authentication credentials are included
+            // Built-in Axios request configuration object
+            onUploadProgress: (data) => {
+            // Monitor upload progress
+            setFileUploadProgress(Math.round((100 * data.loaded) / data.total));
+            },
+          }, 
+          
         );
 
         if (response.status === 200 && response.data) {
+          setIsUploading(false);
           if (selectedChatType === "contact") {
             socket.emit("sendMessage", {
               sender: userInfo.id,
@@ -93,6 +108,7 @@ const MessageBar = () => {
       }
 
     } catch(error) {
+      setIsUploading(false);
       console.log({ error });
     }
   }
