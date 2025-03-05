@@ -115,7 +115,8 @@ export const getAllContacts = async (request, response, next) => {
 
         // Format the response by mapping users into a simpler structure
         const contacts = users.map((user) => ({
-            label: `${user.firstName} ${user.lastName}` // Create a display-friendly label
+            label: `${user.firstName} ${user.lastName}`, // Create a display-friendly label
+            value: user._id, // Use the user's unique ID as the value (useful for selection tracking)
         }));
 
         // Return the contacts as a JSON response
