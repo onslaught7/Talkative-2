@@ -16,22 +16,14 @@ import MultipleSelector from "@/components/ui/multipleselect"
 import { useEffect, useState } from "react"
 import { FaPlus } from 'react-icons/fa'
 import { Input } from '@/components/ui/input'
-import Lottie from 'react-lottie'
-import { animationDefautlOptions } from '@/lib/utils' 
-import { SEARCH_CONTACTS_ROUTES } from "@/utils/constants.js"
 import { apiClient } from "@/lib/api-client.js"
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { Avatar, AvatarImage } from '@/components/ui/avatar'
-import { getColor } from "@/lib/utils.js"
-import { HOST } from "@/utils/constants.js"
+import { GET_ALL_CONTACTS_ROUTES } from "@/utils/constants.js"
 import { useAppStore } from "@/store/index.js"
-import { GET_ALL_CONTACTS_ROUTES } from "@/utils/constants"
   
 const CreateChannel = () => {
 
   const { setSelectedChatType, setSelectedChatData } = useAppStore();
   const [newChannelModal, setNewChannelModal] = useState(false);
-  const [searchedContacts, setSearchedContacts] = useState([]);
   const [allContacts, setAllContacts] = useState([]);
   const [selectedContacts, setSelectedContacts] = useState([]);
   const [channelName, setChannelName] = useState("");
