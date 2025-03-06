@@ -17,12 +17,17 @@ import { useEffect, useState } from "react"
 import { FaPlus } from 'react-icons/fa'
 import { Input } from '@/components/ui/input'
 import { apiClient } from "@/lib/api-client.js"
-import { GET_ALL_CONTACTS_ROUTES } from "@/utils/constants.js"
+import { 
+  GET_ALL_CONTACTS_ROUTES, 
+  CREATE_CHANNEL_ROUTE, 
+  ADD_ADMIN_ROUTE, 
+  REMOVE_ADMIN_ROUTE 
+} from "@/utils/constants.js"
 import { useAppStore } from "@/store/index.js"
   
 const CreateChannel = () => {
 
-  const { setSelectedChatType, setSelectedChatData } = useAppStore();
+  const { setSelectedChatType, setSelectedChatData, addChannel } = useAppStore();
   const [newChannelModal, setNewChannelModal] = useState(false);
   const [allContacts, setAllContacts] = useState([]);
   const [selectedContacts, setSelectedContacts] = useState([]);
@@ -41,7 +46,27 @@ const CreateChannel = () => {
   }, []);
 
   const CreateChannel = async () => {
+    try {
+      if (channelName.length > 0 && selectedContacts.length > 0){
+        const response = await apiClient.post(
+          CREATE_CHANNEL_ROUTE,
+          {
+            name: channelName,
+            members: selectedContacts.map((contact) => contact.value),
+          },
+          { withCredentials: true },
+        );
 
+        if (response.status === 201) {
+          setChannelName("");
+          setSelectedContacts([]);
+          setNewChannelModal(false);
+          addChannel(response.data.channel);
+        }
+      }
+    } catch (error) {
+      console.log({ error });
+    }
   }
 
   return (
