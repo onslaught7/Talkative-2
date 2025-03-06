@@ -7,6 +7,7 @@ import authRoutes from './routes/AuthRoutes.js';
 import contactRoutes from './routes/ContactsRoutes.js';
 import setupSocket from './socket.js';
 import messagesRoutes from './routes/MessagesRoutes.js';
+import channelRoutes from './routes/ChannelRoutes.js';
 // The below hierarchy is to be maintained
 
 // Loads the .env files and adds the files to the variable process.env
@@ -46,6 +47,7 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/contacts", contactRoutes);
 app.use("/api/messages", messagesRoutes); 
+app.use("/api/channels", channelRoutes);
 
 // Start express server and execute callback
 const server = app.listen(port, () => {
