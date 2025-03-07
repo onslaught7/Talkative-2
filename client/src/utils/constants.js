@@ -21,5 +21,6 @@ export const UPLOAD_FILE_ROUTE = `${MESSAGES_ROUTES}/upload-file`;
 
 export const CHANNEL_ROUTES = "api/channels";
 export const CREATE_CHANNEL_ROUTE = `${CHANNEL_ROUTES}/create-channel`;
-export const ADD_ADMIN_ROUTE = `${CHANNEL_ROUTES}/add-admin`;
-export const REMOVE_ADMIN_ROUTE = `${CHANNEL_ROUTES}/remove-admin`;
+export const GET_USER_CHANNELS_ROUTE = `${CHANNEL_ROUTES}/get-user-channels`;
+// export const ADD_ADMIN_ROUTE = `${CHANNEL_ROUTES}/add-admin`;
+// export const REMOVE_ADMIN_ROUTE = `${CHANNEL_ROUTES}/remove-admin`;

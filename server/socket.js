@@ -28,7 +28,7 @@ const setupSocket = (server) => {
             }
         }
     }
-
+    
     const sendMessage = async (message) => {
         // Retirieve the sender's and recipient's websocket session IDs from the user-socket mapping
         const senderSocketId = userSocketMap.get(message.sender);

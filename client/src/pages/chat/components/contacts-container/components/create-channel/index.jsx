@@ -20,8 +20,6 @@ import { apiClient } from "@/lib/api-client.js"
 import { 
   GET_ALL_CONTACTS_ROUTES, 
   CREATE_CHANNEL_ROUTE, 
-  ADD_ADMIN_ROUTE, 
-  REMOVE_ADMIN_ROUTE 
 } from "@/utils/constants.js"
 import { useAppStore } from "@/store/index.js"
   
