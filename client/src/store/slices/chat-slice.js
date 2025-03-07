@@ -13,6 +13,9 @@ export const createChatSlice = (set,get) => ({
     fileUploadProgress: 0, // Upload progress percentage (0 - 100)
     fileDownloadProgress: 0, // Download progress percentage (0 - 100)
 
+    channels:[],
+    setChannels: (channels) => set({channels}),
+
     setIsUploading: (isUploading) => set({ isUploading }), 
     // Function to update the `isUploading` state
 
@@ -31,6 +34,10 @@ export const createChatSlice = (set,get) => ({
     setSelectedChatMessages: (selectedChatMessages) => set({ selectedChatMessages }),
     setDirectMessagesContacts: (directMessagesContacts) => set({ directMessagesContacts }),
 
+    addChannel: (channel) => {
+        const channels = get().channels;
+        set({ channels: [channel, ...channels] });
+    },
     // Function to reset the chat state (e.g., when the chat is closed)
     closeChat: () => set(
         {

@@ -16,22 +16,19 @@ import MultipleSelector from "@/components/ui/multipleselect"
 import { useEffect, useState } from "react"
 import { FaPlus } from 'react-icons/fa'
 import { Input } from '@/components/ui/input'
-import Lottie from 'react-lottie'
-import { animationDefautlOptions } from '@/lib/utils' 
-import { SEARCH_CONTACTS_ROUTES } from "@/utils/constants.js"
 import { apiClient } from "@/lib/api-client.js"
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { Avatar, AvatarImage } from '@/components/ui/avatar'
-import { getColor } from "@/lib/utils.js"
-import { HOST } from "@/utils/constants.js"
+import { 
+  GET_ALL_CONTACTS_ROUTES, 
+  CREATE_CHANNEL_ROUTE, 
+  ADD_ADMIN_ROUTE, 
+  REMOVE_ADMIN_ROUTE 
+} from "@/utils/constants.js"
 import { useAppStore } from "@/store/index.js"
-import { GET_ALL_CONTACTS_ROUTES } from "@/utils/constants"
   
 const CreateChannel = () => {
 
-  const { setSelectedChatType, setSelectedChatData } = useAppStore();
+  const { setSelectedChatType, setSelectedChatData, addChannel } = useAppStore();
   const [newChannelModal, setNewChannelModal] = useState(false);
-  const [searchedContacts, setSearchedContacts] = useState([]);
   const [allContacts, setAllContacts] = useState([]);
   const [selectedContacts, setSelectedContacts] = useState([]);
   const [channelName, setChannelName] = useState("");
@@ -48,8 +45,28 @@ const CreateChannel = () => {
     getData();
   }, []);
 
-  const CreateChannel = async () => {
+  const createChannel = async () => {
+    try {
+      if (channelName.length > 0 && selectedContacts.length > 0){
+        const response = await apiClient.post(
+          CREATE_CHANNEL_ROUTE,
+          {
+            name: channelName,
+            members: selectedContacts.map((contact) => contact.value),
+          },
+          { withCredentials: true },
+        );
 
+        if (response.status === 201) {
+          setChannelName("");
+          setSelectedContacts([]);
+          setNewChannelModal(false);
+          addChannel(response.data.channel);
+        }
+      }
+    } catch (error) {
+      console.log({ error });
+    }
   }
 
   return (
@@ -98,7 +115,7 @@ const CreateChannel = () => {
           <div>
             <Button 
               className="w-full bg-purple-700 hover:bg-purple-800 transition-all duration-300"
-              onClick={CreateChannel}
+              onClick={createChannel}
             >
             create channel
             </Button>

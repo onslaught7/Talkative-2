@@ -18,3 +18,8 @@ export const GET_ALL_CONTACTS_ROUTES = `${CONTACTS_ROUTES}/get-all-contacts`;
 export const MESSAGES_ROUTES = "api/messages";
 export const GET_ALL_MESSAGES_ROUTE = `${MESSAGES_ROUTES}/get-messages`;
 export const UPLOAD_FILE_ROUTE = `${MESSAGES_ROUTES}/upload-file`;
+
+export const CHANNEL_ROUTES = "api/channels";
+export const CREATE_CHANNEL_ROUTE = `${CHANNEL_ROUTES}/create-channel`;
+export const ADD_ADMIN_ROUTE = `${CHANNEL_ROUTES}/add-admin`;
+export const REMOVE_ADMIN_ROUTE = `${CHANNEL_ROUTES}/remove-admin`;

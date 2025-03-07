@@ -12,13 +12,11 @@ const channelSchema = new mongoose.Schema({
             required: true 
         }
     ],
-    admins: [ // Changed from a single admin to an array of admins
-        { 
-            type: mongoose.Schema.ObjectId, 
-            ref: "Users", 
-            required: true 
-        }
-    ],
+    admin: {
+        type: mongoose.Schema.ObjectId, 
+        ref: "Users", 
+        required: true 
+    },
     messages: [
         { type: mongoose.Schema.ObjectId, ref: "Messages", required: false}
     ],
