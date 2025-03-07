@@ -45,7 +45,7 @@ const CreateChannel = () => {
     getData();
   }, []);
 
-  const CreateChannel = async () => {
+  const createChannel = async () => {
     try {
       if (channelName.length > 0 && selectedContacts.length > 0){
         const response = await apiClient.post(
@@ -115,7 +115,7 @@ const CreateChannel = () => {
           <div>
             <Button 
               className="w-full bg-purple-700 hover:bg-purple-800 transition-all duration-300"
-              onClick={CreateChannel}
+              onClick={createChannel}
             >
             create channel
             </Button>
