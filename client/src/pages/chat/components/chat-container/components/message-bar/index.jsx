@@ -57,9 +57,16 @@ const MessageBar = () => {
         messageType: "text",
         fileUrl: undefined,
       });
-
-      setMessage(""); // Clear input field after sending
+    } else if (selectedChatType === "channel") {
+      socket.emit("send-channel-message", {
+        sender: userInfo.id,
+        content: message,
+        messageType: "text",
+        fileUrl: undefined,
+        channelId: selectedChatData._id,
+      });
     }
+    setMessage(""); // Clear input field after sending
   }
 
   // Triggers the hidden file input when the button is clicked
@@ -103,6 +110,14 @@ const MessageBar = () => {
               messageType: "file",
               fileUrl: response.data.filePath, // File path from server response
             });
+          } else if (selectedChatType === "channel") {
+            socket.emit("send-channel-message", {
+              sender: userInfo.id,
+              content: undefined,
+              messageType: "file",
+              fileUrl: response.data.filePath,
+              channelId: selectedChatData._id,
+            }); 
           }
         }
       }

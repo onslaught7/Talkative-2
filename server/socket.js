@@ -1,5 +1,6 @@
 import { Server as SocketIOServer } from "socket.io";
 import Message from "./models/MessagesModel.js";
+import Channel from "./models/ChannelModel.js";
 
 // Function to set up WebSocket communication
 const setupSocket = (server) => {
@@ -28,7 +29,7 @@ const setupSocket = (server) => {
             }
         }
     }
-
+    
     const sendMessage = async (message) => {
         // Retirieve the sender's and recipient's websocket session IDs from the user-socket mapping
         const senderSocketId = userSocketMap.get(message.sender);
@@ -53,6 +54,44 @@ const setupSocket = (server) => {
         }
     };
 
+    const sendChannelMessage = async (message) => {
+        const { channelId, sender, content, messageType, fileUrl } = message;
+
+        const createdMessage = await Message.create({
+            sender, 
+            recipient: null,
+            content, 
+            messageType,
+            fileUrl,
+            timestamp: new Date(),
+        })
+
+        const messageData = await Message.findById(createdMessage._id)
+            .populate("sender", "id email firstName lastName image color")
+            .exec();
+        
+        await  Channel.findByIdAndUpdate(channelId, {
+            $push: { messages: createdMessage._id},
+        });
+
+        const channel = await Channel.findById(channelId).populate("members");
+
+        const finalData = {...messageData._doc, channelId: channel._id }; 
+
+        if (channel && channel.members) {
+            channel.members.forEach((member) => {
+                const memberSocketId = userSocketMap.get(member._id.toString());
+                if (memberSocketId) {
+                    io.to(memberSocketId).emit("receive-channel-message", finalData);
+                }
+            });
+            const adminSocketId = userSocketMap.get(channel.admin._id.toString());
+            if (adminSocketId) {
+                io.to(adminSocketId).emit("receive-channel-message", finalData);
+            } 
+        }
+    }
+
     // Handle new client connections
     io.on("connection", (socket) => {
         // Extract user ID from connection query
@@ -66,7 +105,8 @@ const setupSocket = (server) => {
             console.log("User id not provided during connection.");
         }
 
-        socket.on("sendMessage", sendMessage)
+        socket.on("sendMessage", sendMessage);
+        socket.on("send-channel-message", sendChannelMessage);
         // Handle client disconnection
         socket.on("disconnect", () => disconnect(socket)); 
     });
