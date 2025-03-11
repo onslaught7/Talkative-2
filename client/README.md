@@ -12,3 +12,8 @@ git checkout master
 git pull origin master -->
 
 Apply large file direct sharing, a file being uploaded from one side and is directly being accessed on the other
+Apply state of the art encryption to messages
+
+Problem I faced
+
+Channel messages were pulled whili pulling in messages for dm causing undefined users to occur

@@ -40,6 +40,7 @@ export const getContactsForDMList = async (request, response, next) => {
         let { userId } = request; // Extract userId from request
         userId = new mongoose.Types.ObjectId(userId); // Convert to MongoDB ObjectId
 
+        // ⭕ Modify query to not include any objects/contacts with null id or recipient or sender
         const contacts = await Message.aggregate([
             {
                 $match: {
@@ -114,10 +115,14 @@ export const getAllContacts = async (request, response, next) => {
         );
 
         // Format the response by mapping users into a simpler structure
-        const contacts = users.map((user) => ({
+        const contacts = users.filter(user => user != null).map((user) => ({
             label: `${user.firstName} ${user.lastName}`, // Create a display-friendly label
             value: user._id, // Use the user's unique ID as the value (useful for selection tracking)
         }));
+
+        // console.log(contacts);
+
+        // Filter contacts list
 
         // Return the contacts as a JSON response
         return response.status(200).json({ contacts });

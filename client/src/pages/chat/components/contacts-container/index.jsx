@@ -15,8 +15,8 @@ const ContactsContainer = () => {
     setChannels
   } = useAppStore();
 
-  console.log("directMessagesContacts, contacts-container:")
-  console.log(directMessagesContacts)
+  // console.log("directMessagesContacts, contacts-container:")
+  // console.log(directMessagesContacts)
 
   useEffect(() => {
     const getContacts = async () => {

@@ -20,8 +20,11 @@ const ContactList = ({contacts, ischannel = false}) => {
         if (selectedChatData && selectedChatData._id !== contact._id) {
             setSelectedChatMessages([]);
         }
-        
+        // console.log(contact);
     }
+
+    // console.log(contacts);
+    // console.log(ischannel);
 
     return (
         <div className="mt-5">
@@ -36,7 +39,8 @@ const ContactList = ({contacts, ischannel = false}) => {
                 >
                     <div className="flex gap-5 items-center justify-start text-neutral-300">
                         {
-                            !ischannel && <Avatar className='h-10 w-10 rounded-full overflow-hidden'>
+                            !ischannel && (
+                            <Avatar className='h-10 w-10 rounded-full overflow-hidden'>
                             {
                             contact.image ? (
                                 <AvatarImage src={`${HOST}/${contact.image}`} alt="profile" className='object-cover w-full h-full bg-black'/>
@@ -48,7 +52,7 @@ const ContactList = ({contacts, ischannel = false}) => {
                                 }
                                 >
                                 {
-                                    contact.firstName 
+                                   contact.firstName 
                                     ? contact.firstName.split("").shift()
                                     : contact.email.split("").shift()
                                 }
@@ -56,20 +60,21 @@ const ContactList = ({contacts, ischannel = false}) => {
                             )
                             }
                             </Avatar>
+                            )
                         }
-
                         {
                            ischannel && 
                            (<div className="bg-[#ffffff22] h-10 w-10 flex items-center justify-center rounded-full">
                             #
-                           </div> )}
-                           {
+                           </div> )
+                        }
+                        {
                             ischannel ? (
-                               <span>{contact.name}</span> 
+                                <span>{contact.name}</span> 
                             ) : (
                                 <span>{`${contact.firstName} ${contact.lastName}`}</span>
                             )
-                           }
+                        }
                     </div>
                 </div>
             ))}
