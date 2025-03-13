@@ -2,7 +2,7 @@ import { useAppStore } from "@/store";
 import moment from 'moment';
 import { useEffect, useRef, useState } from "react";
 import { apiClient } from '@/lib/api-client.js'
-import { HOST, GET_ALL_MESSAGES_ROUTE } from "@/utils/constants";
+import { HOST, GET_ALL_MESSAGES_ROUTE, GET_CHANNEL_MESSAGES_ROUTE } from "@/utils/constants";
 import { MdFolderZip } from "react-icons/md"
 import { IoMdArrowRoundDown } from "react-icons/io";
 import { IoCloseSharp } from 'react-icons/io5'
@@ -46,9 +46,27 @@ const MessageContainer = () => {
       }
     }
 
+    const getChannelMessages = async () => {
+      try {
+        const response = await apiClient.get(
+          `${GET_CHANNEL_MESSAGES_ROUTE}/${selectedChatData._id}`,
+          { withCredentials: true }
+        )
+
+        if (response.data.messages) {
+          setSelectedChatMessages(response.data.messages);
+        }
+      } catch (error) {
+        console.log({ error });
+      }
+    }
+
     if (selectedChatData._id) { // Ensure a chat is selected
       // Fetch messages for direct messages (DMs)
       if (selectedChatType === "contact") getMessages();
+      else if (selectedChatType === "channel") {
+        getChannelMessages();
+      }
     }
   }, [selectedChatData, selectedChatType, setSelectedChatMessages]); // Re-run when changes
 

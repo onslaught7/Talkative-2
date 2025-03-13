@@ -49,6 +49,38 @@ export const getUserChannels = async (request, response, next) => {
     }
 };
 
+export const getChannelMessages = async (request, response, next) => {
+    try {
+        // Extract the channelId from the request parameters
+        const { channelId } = request.params;
+
+        // Find the channel by its ID and populate the messages
+        // The 'populate' method is used to fetch the sender details for each message
+        const channel = await Channel.findById(channelId).populate({
+            path: "messages",
+            populate: {
+                path: "sender",
+                select: "firstName lastName email _id image color", 
+            }
+        });
+
+        // If the channel is not found, return a 404 status with an error message
+        if (!channel) {
+            return response.status(404).send("Channel not found");
+        }
+
+        // Extract the messages from the channel
+        const messages = channel.messages;
+
+        // Return the messages with a 201 status code
+        return response.status(201).json({ messages });
+    } catch (error) {
+        // Log any errors and return a 500 status code with an error message
+        console.error(error);
+        return response.status(500).send("Internal Server Error");
+    }
+};
+
 // export const addAdmin = async (request, response) => {
 //     try {
 //         const { channelId, newAdminId } = request.body;

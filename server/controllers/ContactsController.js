@@ -47,6 +47,12 @@ export const getContactsForDMList = async (request, response, next) => {
                     $or: [{ sender: userId }, { recipient: userId }], // Find messages where user is sender or recipient
                 },
             },
+            // aggregation to ignore channel generated messages
+            {
+                $match: {
+                    recipient: { $ne: null } // Exclude messages with null recipients
+                }
+            },
             {
                 $sort: { timestamp: -1 }, // Sort by latest messages first
             },
@@ -95,8 +101,8 @@ export const getContactsForDMList = async (request, response, next) => {
             },
         ])
 
-        // console.log("ContactsConteroller, contacts: ");
-        // console.log(contacts)
+        // console.log("ContactsController, contacts: ");
+        console.log(contacts)
 
         return response.status(200).json({ contacts });
     } catch (error) {
@@ -115,7 +121,7 @@ export const getAllContacts = async (request, response, next) => {
         );
 
         // Format the response by mapping users into a simpler structure
-        const contacts = users.filter(user => user != null).map((user) => ({
+        const contacts = users.map((user) => ({
             label: `${user.firstName} ${user.lastName}`, // Create a display-friendly label
             value: user._id, // Use the user's unique ID as the value (useful for selection tracking)
         }));

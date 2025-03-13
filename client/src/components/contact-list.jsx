@@ -20,7 +20,7 @@ const ContactList = ({contacts, ischannel = false}) => {
         if (selectedChatData && selectedChatData._id !== contact._id) {
             setSelectedChatMessages([]);
         }
-        // console.log(contact);
+        // console.log({contact});
     }
 
     // console.log(contacts);
@@ -52,7 +52,7 @@ const ContactList = ({contacts, ischannel = false}) => {
                                 }
                                 >
                                 {
-                                   contact.firstName 
+                                    contact.firstName 
                                     ? contact.firstName.split("").shift()
                                     : contact.email.split("").shift()
                                 }

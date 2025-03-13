@@ -8,7 +8,7 @@ const ChatHeader = () => {
 
   const { closeChat, selectedChatData, selectedChatType } = useAppStore();
 
-  console.log(selectedChatData)
+  // console.log(selectedChatData)
 
   // console.log(getColor(selectedChatData.color));
   return (
