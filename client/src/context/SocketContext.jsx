@@ -29,20 +29,24 @@ export const SocketProvider = ({ children }) => {
             const handleRecieveMessage = (message) => {
                 // getState() allows you to access the store's current state outside of a React component or hook
                 // Unlike useAppStore(), which is a React hook and must be used within a component or hook function
-                const { selectedChatData, selectedChatType, addMessage } = useAppStore.getState();
+                const { selectedChatData, selectedChatType, addMessage, addContactsToDMContacts } = useAppStore.getState();
 
                 if (selectedChatType !== undefined && (selectedChatData._id === message.sender._id || selectedChatData._id === message.recipient._id)) {
                     console.log("message recieved", message);
                     addMessage(message);
                 }
+
+                addContactsToDMContacts(message);
             }
 
             const handleRecieveChannelMessage = (message) => {
-                const { selectedChatData, selectedChatType, addMessage } = useAppStore.getState();
+                const { selectedChatData, selectedChatType, addMessage, addChannelToChannelList } = useAppStore.getState();
 
                 if (selectedChatType !== undefined && selectedChatData._id === message.channelId) {
                     addMessage(message);
                 }
+
+                addChannelToChannelList(message);
             }
 
             socket.current.on("receiveMessage", handleRecieveMessage);
