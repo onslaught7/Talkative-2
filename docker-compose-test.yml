@@ -1,28 +1,8 @@
 version: "3.9"
 services:
   server:
-    build:
-      context: ./server
-      dockerfile: Dockerfile
-    command: ["npm", "run", "test"]  # assumes test script in package.json
-    environment:
-      - DATABASE_URL=mongodb://mongo:27017/talkative-test
-    depends_on:
-      - mongo
-    networks:
-      - backend
+    command: 
+      - "npm"
+      - "run"
+      - "test"
 
-  mongo:
-    image: mongo:6.0
-    ports:
-      - "27018:27017"  # separate port for test DB
-    volumes:
-      - mongo-test-data:/data/db
-    networks:
-      - backend
-
-networks:
-  backend:
-
-volumes:
-  mongo-test-data:

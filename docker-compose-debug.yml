@@ -1,39 +1,11 @@
 version: "3.9"
 services:
   server:
-    build:
-      context: ./server
-      dockerfile: Dockerfile
+    command: 
+      - "npm"
+      - "run"
+      - "debug-docker"
     ports:
       - "3000:3000"
-      - "9229:9229"  # Node.js debugger
-    volumes:
-      - ./server:/usr/src/app
-      - /usr/src/app/node_modules
-    environment:
-      - PORT=3000
-      - JWT_KEY=(*%*(&(#)^(&*%#&^@)KrutibashChatAppTalkative080125))
-      - ORIGIN=http://localhost:5173
-      - DATABASE_URL=mongodb://mongo:27017/talkative
-    command: ["npm", "run", "debug"]  
-    depends_on:
-      - mongo
-    networks:
-      - backend
-      - frontend
-
-  mongo:
-    image: mongo:6.0
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo-data:/data/db
-    networks:
-      - backend
-
-networks:
-  frontend:
-  backend:
-
-volumes:
-  mongo-data:
+      # inspect debug port
+      - "9229:9229"

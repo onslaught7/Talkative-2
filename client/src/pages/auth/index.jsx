@@ -171,12 +171,12 @@ const Auth = () => {
                             >
                             Login
                             </Button>
-                            <Button
+                            {/* <Button
                             className="rounded-full p-6"
                             onClick={handleGoogleLogin}
                             >
                             <FaGoogle /> google
-                            </Button>
+                            </Button> */}
                         </TabsContent>
                         <TabsContent className="flex flex-col gap-5" value="signup">
                         <Input
@@ -206,12 +206,12 @@ const Auth = () => {
                             >
                             Signup
                             </Button>
-                            <Button
+                            {/* <Button
                             className="rounded-full p-6"
                             onClick={handleGoogleSignup}
                             >
                             <FaGoogle /> google
-                            </Button>
+                            </Button> */}
                         </TabsContent>
                     </Tabs>
                 </div>

@@ -42,6 +42,9 @@ app.use(cookieParser());
 // and makes them available under req.body
 app.use(express.json());
 
+app.get('/ping', (req, res) => {
+    res.status(200).send('pong');
+  });  
 // Call the authRoutes method to handle /api/auth route and 
 // contactRoutes method to handle /api/contacts route
 app.use("/api/auth", authRoutes);

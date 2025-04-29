@@ -1,42 +1,43 @@
-version: "3.9"
 services:
   client:
-    image: client-vite
+    image: client-vite-nginx
     build:
       context: ./client
       dockerfile: Dockerfile
-    ports:
-      - "5173:5173"  # Vite dev server
-    volumes:
-      - ./client:/app
-      - /app/node_modules
-    environment:
-      - VITE_SERVER_URL=http://localhost:3000
-    command: ["npm", "run", "dev"]
+    init: true
     networks:
       - frontend
+    ports:
+      - "80:8080"  # Vite dev server
+    environment:
+      - VITE_SERVER_URL=http://localhost:3000
 
   server:
     image: server-node
     build:
       context: ./server
       dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
+      target: dev
+    init: true
     volumes:
-      - ./server:/usr/src/app
-      - /usr/src/app/node_modules
+      - type: bind
+        source: ./server/
+        target: /usr/src/app/
+      - type: volume
+        target: /usr/src/app/node_modules
+    depends_on:
+    - mongo
     environment:
       - PORT=3000
       - JWT_KEY=(*%*(&(#)^(&*%#&^@)KrutibashChatAppTalkative080125))
-      - ORIGIN=http://localhost:5173
+      - ORIGIN=http://localhost
       - DATABASE_URL=mongodb://mongo:27017/talkative
-    depends_on:
-      - mongo
-    command: ["npm", "run", "dev"]
     networks:
       - backend
       - frontend
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
 
   mongo:
     image: mongo:6.0
