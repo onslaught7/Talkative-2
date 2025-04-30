@@ -27,11 +27,8 @@ services:
         target: /usr/src/app/node_modules
     depends_on:
     - mongo
-    environment:
-      - PORT=3000
-      - JWT_KEY=(*%*(&(#)^(&*%#&^@)KrutibashChatAppTalkative080125))
-      - ORIGIN=http://localhost
-      - DATABASE_URL=mongodb://mongo:27017/talkative
+    env_file:
+      - ./server/.env
     networks:
       - backend
       - frontend
