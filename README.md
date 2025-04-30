@@ -1,19 +1,84 @@
 # Talkative-2
 
-Talkative-2 is a project designed for communication supporting direct messaging, group chats and file sharing
-Leveraged JWT for user authentication and session management. Enabled real-time communication between users and groups using Socket.IO. Leveraged Zustand for global state management. This README will guide you through the steps to set up and run the project on your local system.
+Talkative-2 is a project designed for real-time communication with support for direct messaging, group chats, and file sharing.
 
-## Features
+Built using:
+- JWT for authentication and session management
+- Socket.IO for real-time communication
+- Zustand for global state management
+- MongoDB for data persistence
+- Docker for containerized development
 
-- Real-time chat
-- Creating channels (group chat)
-- JWT authentication
+---
+
+## 🚀 Features
+
+- Real-time personal & group chat
+- Channel (group) creation
 - Image and file sharing
-- End-to-end encryption
-- Google OAuth2.O
+- JWT-based user authentication
+- Token-based session management
+- Message encryption
 
-To run this project, you need to have MongoDB installed and running on your local system. Follow these steps to set up MongoDB:
+---
 
+Two ways to clone and run the repo:
+
+## 🐳 Run with Docker (Recommended)
+
+This is the easiest way to get started without installing MongoDB or Node manually.
+
+### 🛠 Prerequisites:
+- [Docker Desktop](https://www.docker.com/products/docker-desktop)
+- [GNU Make](https://www.gnu.org/software/make/) installed (`make` command)
+
+### Steps:
+
+1. Clone the repository:
+    ```bash
+    git clone https://github.com/onslaught7/Talkative-2.git
+    cd Talkative-2
+    ```
+
+2. Create an `.env` file in the `/server` directory:
+    ```env
+    PORT=3000
+    JWT_KEY=Your_Secret_JWT_Key
+    ORIGIN=http://localhost
+    DATABASE_URL=mongodb://mongo:27017/talkative
+    ```
+
+3. Create an `.env` file in the `/client` directory:
+    ```env
+    VITE_SERVER_URL=http://localhost:3000
+    ```
+
+4. Run the app using Docker:
+    ```bash
+    make compose-up-build
+    ```
+
+5. To stop containers:
+    ```bash
+    make compose-down
+    ```
+
+6. To just build images without running:
+    ```bash
+    make compose-build
+    ```
+
+7. Open your browser and visit:
+    - Frontend: [http://localhost:80](http://localhost)
+    - Backend API: [http://localhost:3000](http://localhost:3000)
+
+---
+
+## 🧪 Manual Installation (Without Docker)
+
+> If you prefer to run it locally with Node.js and MongoDB installed:
+
+### Install & Run Client:
 1. **Download and Install MongoDB:**
     - Go to the [MongoDB Download Center](https://www.mongodb.com/try/download/community) and download the MongoDB Community Server for your operating system.
     - Follow the installation instructions for your operating system.
@@ -76,5 +141,3 @@ create another account and add account_1 as contacts
 ## Contact
 
 If you want to contact me, you can reach me at [krutibashmohapatra7@gmail.com].
-## Setting up MongoDB
-
