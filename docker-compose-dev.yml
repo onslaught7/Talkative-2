@@ -1,0 +1,53 @@
+services:
+  client:
+    image: client-vite-nginx
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    init: true
+    networks:
+      - frontend
+    ports:
+      - "80:8080"  # Vite dev server
+    environment:
+      - VITE_SERVER_URL=http://localhost:3000
+
+  server:
+    image: server-node
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+      target: dev
+    init: true
+    volumes:
+      - type: bind
+        source: ./server/
+        target: /usr/src/app/
+      - type: volume
+        target: /usr/src/app/node_modules
+    depends_on:
+    - mongo
+    env_file:
+      - ./server/.env
+    networks:
+      - backend
+      - frontend
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+
+  mongo:
+    image: mongo:6.0
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - backend
+
+volumes:
+  mongo-data:
+
+networks:
+  frontend:
+  backend:

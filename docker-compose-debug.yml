@@ -1,0 +1,11 @@
+version: "3.9"
+services:
+  server:
+    command: 
+      - "npm"
+      - "run"
+      - "debug-docker"
+    ports:
+      - "3000:3000"
+      # inspect debug port
+      - "9229:9229"

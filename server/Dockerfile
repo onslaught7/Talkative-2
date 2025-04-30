@@ -9,7 +9,7 @@ WORKDIR /usr/src/app
 # dependencies (better layer caching)
 COPY package*.json ./
 
-FROM base as dev
+FROM base AS dev
 
 RUN --mount=type=cache,target=/usr/src/app/.npm \
   npm set cache /usr/src/app/.npm && \
@@ -19,10 +19,10 @@ COPY . .
 
 CMD ["npm", "run", "dev"]
 
-FROM base as production
+FROM base AS production
 
 # Set NODE_ENV
-ENV NODE_ENV production
+ENV NODE_ENV=production
 
 # Install only production dependencies
 # Use cache mount to speed up install of existing dependencies
@@ -39,7 +39,7 @@ COPY --chown=node:node ./healthcheck/ .
 
 # Copy remaining source code AFTER installing dependencies. 
 # Again, copy only the necessary files
-COPY --chown=node:node ./src/ .
+COPY --chown=node:node . .
 
 # Indicate expected port
 EXPOSE 3000
