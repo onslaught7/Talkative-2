@@ -5,6 +5,9 @@ FROM node:20.11-bullseye-slim AS base
 # Specify working directory other than /
 WORKDIR /usr/src/app
 
+# Upgrade Debian packages to patch vulnerabilities
+RUN apt-get update && apt-get upgrade -y && apt-get clean
+
 # Copy only files required to install
 # dependencies (better layer caching)
 COPY package*.json ./
