@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.5
 
-FROM node:19.4-bullseye AS build
+FROM node:20.11-bullseye-slim AS build
 
 # Specify working directory other than /
 WORKDIR /usr/src/app

@@ -1,6 +1,6 @@
 # Pin specific version for stability
 # Use slim for reduced image size
-FROM node:19.6-bullseye-slim AS base
+FROM node:20.11-bullseye-slim AS base
 
 # Specify working directory other than /
 WORKDIR /usr/src/app
